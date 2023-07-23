@@ -12,8 +12,8 @@ class _HomePageState extends State<HomePage> {
   final nameController = TextEditingController();
   final contactController = TextEditingController();
   final snController = TextEditingController();
-  final CollectionReference _items =
-      FirebaseFirestore.instance.collection("items");
+  final CollectionReference _contact =
+      FirebaseFirestore.instance.collection("contact");
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +21,7 @@ class _HomePageState extends State<HomePage> {
         title: const Text("Contact List"),
       ),
       body: StreamBuilder(
-        stream: _items.snapshots(),
+        stream: _contact.snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
           if (streamSnapshot.hasData) {
             return ListView.builder(
@@ -124,7 +124,7 @@ class _HomePageState extends State<HomePage> {
                     final int? sn = int.tryParse(snController.text);
                     final int? number = int.tryParse(contactController.text);
                     if (number != null) {
-                      await _items
+                      await _contact
                           .add({"name": name, "number": number, "sn": sn});
                       nameController.text = '';
                       contactController.text = '';
@@ -195,7 +195,7 @@ class _HomePageState extends State<HomePage> {
                     final int? sn = int.tryParse(snController.text);
                     final int? number = int.tryParse(contactController.text);
                     if (number != null) {
-                      await _items
+                      await _contact
                           .doc(snapshot!.id)
                           .update({"name": name, "number": number, "sn": sn});
                       nameController.text = '';
@@ -213,7 +213,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> deleteData(String contactId) async {
-    await _items.doc(contactId).delete();
+    await _contact.doc(contactId).delete();
   }
 
   Widget updateDeleteData(DocumentSnapshot? snapshot) {
